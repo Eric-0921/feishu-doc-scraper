@@ -1,0 +1,13 @@
+# 第三方库源码
+crawl4ai/
+
+# Python 临时文件
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# 捕获的数据 (可选，但建议包含以便备份目前的侦察结果)
+# structure.json
+# toc_report.md
