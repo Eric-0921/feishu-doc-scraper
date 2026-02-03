@@ -1,0 +1,29 @@
+{
+  "completed": [
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/overview",
+    "https://open.feishu.cn/document/ukTMukTMukTM/ukDNz4SO0MjL5QzM/AI-assistant-code-generation-guide",
+    "https://open.feishu.cn/document/server-docs/application-scope/introduction",
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/set-ip-allowlist",
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-",
+    "https://open.feishu.cn/document/server-docs/api-call-guide/server-api-list",
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-access-token",
+    "https://open.feishu.cn/document/server-docs/api-call-guide/frequency-control",
+    "https://open.feishu.cn/document/api-call-guide/calling-process/configure-app-data-permissions"
+  ],
+  "failed": [
+    "https://open.feishu.cn/document/server-docs/application-scope/scope-list"
+  ],
+  "skipped": [],
+  "file_sizes": {
+    "https://open.feishu.cn/document/ukTMukTMukTM/ukDNz4SO0MjL5QzM/AI-assistant-code-generation-guide": 4773,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/overview": 3500,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-access-token": 11862,
+    "https://open.feishu.cn/document/server-docs/application-scope/introduction": 19664,
+    "https://open.feishu.cn/document/api-call-guide/calling-process/configure-app-data-permissions": 14235,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/set-ip-allowlist": 1674,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/calling-process/get-": 10419,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/server-api-list": 169,
+    "https://open.feishu.cn/document/server-docs/api-call-guide/frequency-control": 5300
+  },
+  "last_updated": "2026-02-03T11:30:32.453242"
+}

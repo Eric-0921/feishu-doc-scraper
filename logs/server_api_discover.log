@@ -1,0 +1,41 @@
+2026-02-03 10:39:14,628 - INFO - 目标 URL: https://open.feishu.cn/document/ukTMukTMukTM/ukDNz4SO0MjL5QzM/AI-assistant-code-generation-guide
+2026-02-03 10:39:14,628 - INFO - 输出文件: /home/tseng/git/vast-hosting/feishu-doc-scraper/configs/server_api_structure.json
+2026-02-03 10:39:15,066 - INFO - 正在导航...
+2026-02-03 10:39:22,834 - INFO - 侧边栏加载成功。
+2026-02-03 10:39:22,834 - INFO - 开始展开所有节点...
+2026-02-03 10:39:22,851 - INFO - 第 1 轮：发现 48 个折叠节点，正在展开...
+2026-02-03 10:39:39,893 - INFO - 第 2 轮：发现 305 个折叠节点，正在展开...
+2026-02-03 10:42:38,992 - INFO - 第 3 轮：发现 1185 个折叠节点，正在展开...
+2026-02-03 10:48:26,343 - INFO - 第 4 轮：发现 1894 个折叠节点，正在展开...
+2026-02-03 10:50:53,646 - INFO - 第 5 轮：发现 2061 个折叠节点，正在展开...
+2026-02-03 10:51:06,633 - INFO - 第 6 轮：发现 2065 个折叠节点，正在展开...
+2026-02-03 10:51:10,070 - INFO - 没有可点击的按钮，停止展开。
+2026-02-03 10:51:10,070 - INFO - 正在提取目录结构...
+Traceback (most recent call last):
+  File "/home/tseng/git/vast-hosting/feishu-doc-scraper/tools/discover.py", line 208, in <module>
+    asyncio.run(discover(args.url, args.output))
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/tseng/git/vast-hosting/feishu-doc-scraper/tools/discover.py", line 147, in discover
+    node_url = await url_handle.get_property("href")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 1733, in get_property
+    await self._impl_obj.get_property(propertyName=property_name)
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/site-packages/playwright/_impl/_js_handle.py", line 98, in get_property
+    await self._channel.send("getProperty", None, dict(name=propertyName))
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tseng/anaconda3/envs/feishu-scraper/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: JSHandle.get_property: TypeError: Cannot read properties of null (reading 'href')
+    at eval (eval at evaluate (:290:30), <anonymous>:3:38)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)

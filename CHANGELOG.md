@@ -6,6 +6,30 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- [V5.1] 鲁棒性增强版，支持无人值守长时间抓取：
+  - 延时随机性增强：混合使用高斯/均匀/指数/突发四种分布
+  - 延时范围扩展：2-15秒（原 1-6秒）
+  - 长休息机制：每 80-120 页休息 2-5 分钟
+  - 反爬自动应对：验证码检测、HTTP 429 指数退避、连续失败冷却
+  - 信号处理：SIGINT/SIGTERM 优雅退出
+  - 心跳日志：每 30 秒写入存活状态
+  - 专业进度显示：实时统计 OK/FAIL/SKIP，无 emoji
+- 通用目录侦察工具 `tools/discover.py`：支持任意飞书文档 URL
+- 服务端 API 目录侦察完成（2678 个节点）
+- `harvest_new.py` 新增 `--id-range` 参数，支持分批抓取
+
+### Changed
+
+- `core/config.py`: 延时参数调整，新增退避和心跳配置
+- `core/behavioral.py`: 重写随机延时算法
+- `scrapers/feishu_copy.py`: 重写抓取主逻辑，增加故障恢复
+
+---
+
+## [V5.0] - 2026-02-02 (历史版本)
+
+### Added
+
 - [V4] 开发人类行为模拟版抓取脚本 `copy_page_harvest_v4.py`：
   - 高斯分布延迟（更自然的随机模式）
   - 随机休息停顿（每 5-15 页休息 5-15 秒）

@@ -1,0 +1,8 @@
+🚀 启动任务: server_api
+📂 输出目录: /home/tseng/git/vast-hosting/feishu-doc-scraper/docs/server_api
+📝 状态文件: /home/tseng/git/vast-hosting/feishu-doc-scraper/logs/server_api_state.json
+⚠️  测试模式限制: 仅抓取前 10 页
+2026-02-03 11:27:54 [INFO] [FeishuScraper] Starting scrape task...
+Task: 10 total, 0 done, 10 pending
+[0/10] OK:0 FAIL:0 SKIP:0 | Elapsed:0:00:00 ETA:calculating... | 智能助手：从自然语言到可执行代码                                       [1/10] OK:1 FAIL:0 SKIP:0 | Elapsed:0:00:20 ETA:0:03:04 | 流程概述                                                          [2/10] OK:2 FAIL:0 SKIP:0 | Elapsed:0:00:27 ETA:0:01:51 | 获取访问凭证                                                        [3/10] OK:3 FAIL:0 SKIP:0 | Elapsed:0:00:39 ETA:0:01:31 | 申请 API 权限                                                     [4/10] OK:4 FAIL:0 SKIP:0 | Elapsed:0:00:47 ETA:0:01:11 | 配置应用数据权限                                                      [5/10] OK:5 FAIL:0 SKIP:0 | Elapsed:0:01:03 ETA:0:01:03 | 设置 IP 白名单                                                     [6/10] OK:6 FAIL:0 SKIP:0 | Elapsed:0:01:17 ETA:0:00:51 | 调用 API                                                        [7/10] OK:7 FAIL:0 SKIP:0 | Elapsed:0:01:37 ETA:0:00:41 | API 列表                                                        [8/10] OK:8 FAIL:0 SKIP:0 | Elapsed:0:01:54 ETA:0:00:28 | API 权限列表                                                      [9/10] OK:8 FAIL:1 SKIP:0 | Elapsed:0:02:26 ETA:0:00:18 | 频控策略                                                          
+[DONE] Completed: 9, Failed: 1

@@ -13,9 +13,10 @@ from scrapers.feishu_copy import FeishuCopyScraper
 
 async def main():
     parser = argparse.ArgumentParser(description="飞书文档抓取器 V5 (架构重构版)")
-    parser.add_argument("--structure", type=str, required=True, help="目录结构文件路径 (例如: configs/tutorial_structure.json)")
-    parser.add_argument("--limit", type=int, default=0, help="限制抓取页面数 (0=全量)")
-    parser.add_argument("--output-dir", type=str, default=None, help="自定义输出目录名 (默认根据 structure 文件名自动生成)")
+    parser.add_argument("--structure", type=str, required=True, help="目录结构文件路径")
+    parser.add_argument("--id-range", type=str, default=None, help="指定 ID 范围抓取 (格式: start-end, 例如: 0-1000)")
+    parser.add_argument("--limit", type=int, default=0, help="限制抓取数量 (0=不限)")
+    parser.add_argument("--output-dir", type=str, default=None, help="自定义输出目录名")
     
     args = parser.parse_args()
     
@@ -29,17 +30,13 @@ async def main():
         sys.exit(1)
         
     # 动态确定输出目录和状态文件名
-    # 例如 guide_structure.json -> guide
     task_name = structure_path.stem.replace('_structure', '')
     
-    # 如果指定了 output-dir，优先级最高；否则根据 task_name 自动在 docs/ 下创建
     if args.output_dir:
         config.OUTPUT_DIR = Path(args.output_dir)
     else:
-        # e.g., docs/tutorial
         config.OUTPUT_DIR = config.BASE_DIR / "docs" / task_name
     
-    # 状态文件放在 logs/ 下，避免污染根目录
     state_file = config.LOG_DIR / f"{task_name}_state.json"
     report_file = config.LOG_DIR / f"{task_name}_report.md"
     
@@ -54,6 +51,16 @@ async def main():
     # 过滤有效 URL
     harvest_list = [n for n in nodes if n.get('url') and n['url'].startswith('http')]
     
+    # 处理 ID 范围过滤
+    if args.id_range:
+        try:
+            start_id, end_id = map(int, args.id_range.split('-'))
+            harvest_list = [n for n in harvest_list if start_id <= n['id'] <= end_id]
+            print(f"📍 范围模式: 已筛选 ID 在 {start_id} 到 {end_id} 之间的页面")
+        except ValueError:
+            print(f"❌ 错误: 无效的 ID 范围格式 '{args.id_range}'，请使用 start-end 格式")
+            sys.exit(1)
+
     if args.limit > 0:
         harvest_list = harvest_list[:args.limit]
         print(f"⚠️  测试模式限制: 仅抓取前 {args.limit} 页")
