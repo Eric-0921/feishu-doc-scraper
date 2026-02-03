@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- [DONE] **服务端 API 专项抓取**: 完成了全部 2065 个页面的抓取任务，成功率 99.9% (2063 成功, 2 失败)，历时约 8.5 小时。
+- [FIX] **大页面超时优化**: 引入 `domcontentloaded` 策略与 60s 强制超时保护，解决了包含大量内容的页面卡死问题。
+- [Feat] **通用目录发现工具**: 开发了 `tools/discover.py`，支持任意飞书文档根路径的自动层级扫描。
 - [V5.1] 鲁棒性增强版，支持无人值守长时间抓取：
   - 延时随机性增强：混合使用高斯/均匀/指数/突发四种分布
   - 延时范围扩展：2-15秒（原 1-6秒）
