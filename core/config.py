@@ -32,11 +32,8 @@ class ScraperConfig:
     # 反爬检测
     ANTI_BOT_KEYWORDS: tuple = (
         "captcha", 
-        "challenge", 
         "human verification", 
-        "请完成验证",
-        "访问过于频繁",
-        "请稍后再试"
+        "请完成验证"
     )
     
     # 指数退避配置

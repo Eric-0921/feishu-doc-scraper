@@ -226,59 +226,86 @@ class FeishuCopyScraper:
             print(f"\n[DONE] Completed: {self.progress.completed}, Failed: {self.progress.failed}")
 
     async def _process_page(self, url: str, output_file: Path, title: str) -> bool:
-        """单页处理逻辑"""
+        """单页处理逻辑 - 带整体超时保护"""
         for retry in range(self.config.MAX_RETRIES):
             try:
-                response = await self.page.goto(url, wait_until="networkidle", timeout=self.config.TIMEOUT)
-                
-                # HTTP 状态码检查
-                if response and response.status == 429:
-                    wait_time = min(self.backoff_time, self.config.BACKOFF_MAX)
-                    self.progress.print_line(f"[HTTP 429] Rate limited, waiting {wait_time}s...")
-                    await asyncio.sleep(wait_time)
-                    self.backoff_time = int(self.backoff_time * self.config.BACKOFF_FACTOR)
-                    continue
-                
-                await self.human.simulate_interaction(self.page)
-                
-                # 检测反爬
-                content = await self.page.content()
-                if any(kw in content.lower() for kw in self.config.ANTI_BOT_KEYWORDS):
-                    self.progress.print_line(f"[ANTI-BOT] Detected on {title[:30]}, waiting 5min...")
-                    await asyncio.sleep(300)  # 等待 5 分钟
-                    await self.page.reload()
-                    continue
-                
-                # 核心抓取逻辑：寻找"复制页面"按钮
-                copy_btn = self.page.locator('button:has-text("复制页面")')
-                if await copy_btn.count() > 0:
-                    await copy_btn.first.click()
-                    await asyncio.sleep(0.5)
-                    text = await self.page.evaluate("navigator.clipboard.readText()")
-                else:
-                    # 备选方案：全选复制
-                    await self.page.locator(".doc-content").click()
-                    await self.page.keyboard.press("Control+a")
-                    await self.page.keyboard.press("Control+c")
-                    await asyncio.sleep(0.5)
-                    text = await self.page.evaluate("navigator.clipboard.readText()")
-                
-                if text and len(text) > 50:
-                    header = f"# {title}\n\n> Source: {url}\n\n---\n\n"
-                    with open(output_file, 'w', encoding='utf-8') as f:
-                        f.write(header + text)
-                    return True
-                
+                # 使用整体超时包裹，避免永久卡死（60秒）
+                return await asyncio.wait_for(
+                    self._do_process_page(url, output_file, title),
+                    timeout=60.0
+                )
+            except asyncio.TimeoutError:
+                self.logger.warning(f"Retry {retry+1}/{self.config.MAX_RETRIES} {title}: Page processing timeout (60s)")
+                # 超时后刷新页面
+                try:
+                    await self.page.reload(timeout=10000)
+                except:
+                    pass
+                await asyncio.sleep(2 + retry * 2)
             except Exception as e:
                 self.logger.warning(f"Retry {retry+1}/{self.config.MAX_RETRIES} {title}: {str(e)[:50]}")
                 await asyncio.sleep(2 + retry * 2)
+        return False
+    
+    async def _do_process_page(self, url: str, output_file: Path, title: str) -> bool:
+        """实际页面处理逻辑"""
+        # 使用 domcontentloaded 而非 networkidle，避免大页面卡死
+        response = await self.page.goto(url, wait_until="domcontentloaded", timeout=self.config.TIMEOUT)
+        
+        # HTTP 状态码检查
+        if response and response.status == 429:
+            wait_time = min(self.backoff_time, self.config.BACKOFF_MAX)
+            self.progress.print_line(f"[HTTP 429] Rate limited, waiting {wait_time}s...")
+            await asyncio.sleep(wait_time)
+            self.backoff_time = int(self.backoff_time * self.config.BACKOFF_FACTOR)
+            return False
+        
+        # 等待页面内容加载完成（等待复制按钮出现或超时）
+        try:
+            await self.page.wait_for_selector('button:has-text("复制页面")', timeout=15000)
+        except:
+            # 如果复制按钮没出现，等待一下内容区域
+            await asyncio.sleep(3)
+        
+        await self.human.simulate_interaction(self.page)
+        
+        # 检测反爬（简化版：直接跳过，不等待）
+        content = await self.page.content()
+        if any(kw in content.lower() for kw in self.config.ANTI_BOT_KEYWORDS):
+            self.progress.print_line(f"[ANTI-BOT] Detected on {title[:30]}, skipping...")
+            return False
+
+        
+        # 核心抓取逻辑：寻找"复制页面"按钮
+        copy_btn = self.page.locator('button:has-text("复制页面")')
+        if await copy_btn.count() > 0:
+            await copy_btn.first.click()
+            await asyncio.sleep(1.0)  # 大页面需要更长时间复制到剪贴板
+            text = await self.page.evaluate("navigator.clipboard.readText()")
+        else:
+            # 备选方案：全选复制
+            await self.page.locator(".doc-content").click()
+            await self.page.keyboard.press("Control+a")
+            await self.page.keyboard.press("Control+c")
+            await asyncio.sleep(1.0)
+            text = await self.page.evaluate("navigator.clipboard.readText()")
+        
+        if text and len(text) > 50:
+            header = f"# {title}\n\n> Source: {url}\n\n---\n\n"
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(header + text)
+            return True
         
         return False
 
+
     def _generate_report(self, harvest_list):
-        """生成报告"""
+        """生成报告 - 包含失败页面的详细信息便于手动补充"""
         elapsed = time.time() - self.state.start_time if self.state.start_time else 0
         elapsed_str = str(timedelta(seconds=int(elapsed)))
+        
+        # 构建 URL 到节点信息的映射
+        url_to_node = {n.get('url'): n for n in harvest_list if n.get('url')}
         
         with open(self.report_file, 'w', encoding='utf-8') as f:
             f.write(f"# Scrape Report\n\n")
@@ -291,6 +318,15 @@ class FeishuCopyScraper:
             f.write(f"- Skipped: {len(self.state.skipped)}\n\n")
             
             if self.state.failed:
-                f.write(f"## Failed Pages\n\n")
-                for url in list(self.state.failed)[:50]:
-                    f.write(f"- {url}\n")
+                f.write(f"## Failed Pages (需手动补充)\n\n")
+                f.write("| ID | Title | URL | Expected Path |\n")
+                f.write("|-----|-------|-----|---------------|\n")
+                for url in list(self.state.failed):
+                    node = url_to_node.get(url, {})
+                    title = node.get('title', 'Unknown')
+                    node_id = node.get('id', '?')
+                    folder_path = url_to_folder_path(url)
+                    safe_title = safe_filename(title)
+                    expected_path = f"docs/server_api/{folder_path}/{node_id:04d}_{safe_title}.md" if isinstance(node_id, int) else f"docs/server_api/{folder_path}/{safe_title}.md"
+                    f.write(f"| {node_id} | {title[:30]} | {url} | `{expected_path}` |\n")
+                f.write("\n")
