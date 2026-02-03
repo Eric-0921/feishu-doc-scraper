@@ -40,6 +40,7 @@ except ImportError:
 
 # ============ 配置 ============
 OUTPUT_DIR = Path("docs")
+# 默认值，将在 main 中根据 structure 参数更新
 STATE_FILE = Path("harvest_state.json")
 LOG_FILE = Path("harvest.log")
 REPORT_FILE = Path("harvest_report.md")
@@ -512,5 +513,15 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=0, help="限制抓取页面数 (0=全量)")
     parser.add_argument("--structure", type=str, default="structure.json", help="目录结构文件路径")
     args = parser.parse_args()
+    
+    # 根据 structure 文件名动态调整状态和报告文件名
+    prefix = Path(args.structure).stem
+    STATE_FILE = Path(f"{prefix}_state.json")
+    LOG_FILE = Path(f"{prefix}_harvest.log")
+    REPORT_FILE = Path(f"{prefix}_report.md")
+    
+    # 更新全局配置中的 Path 对象
+    # 注意：由于我们在 main 中修改了全局变量，这在脚本模式下是可以工作的
+    # 但更安全的方式是传入这些路径
     
     asyncio.run(copy_page_harvest_v4(limit=args.limit, structure_file=args.structure))

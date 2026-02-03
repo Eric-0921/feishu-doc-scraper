@@ -1,2 +1,29 @@
 2026-02-03 06:08:06,671 [INFO] [模式] 限制抓取 3 页
 2026-02-03 06:08:51,512 [INFO] 报告已生成: harvest_report.md
+2026-02-03 06:12:13,351 [INFO] [模式] 限制抓取 1 页
+2026-02-03 06:12:26,542 [INFO] 报告已生成: harvest_report.md
+2026-02-03 06:26:01,859 [WARNING]   重试 1/3: 卡片 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 07:50:14,131 [WARNING]   重试 1/3: 图标库 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 07:50:46,136 [WARNING]   重试 2/3: 图标库 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 07:51:18,141 [ERROR] 抓取失败: 图标库 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 08:04:07,021 [WARNING]   重试 1/3: 搜索首次可用时 - Page.goto: net::ERR_NETWORK_CHANGED at https://open.feishu.cn/document/web-compo
+2026-02-03 08:21:12,865 [WARNING]   重试 1/3: iOS Tab容器_OC(7.18-7.31) - Page.goto: net::ERR_NETWORK_CHANGED at https://open.feishu.cn/document/uAjLw4CM/
+2026-02-03 08:29:46,210 [WARNING]   重试 1/3: iOS组件通用注册表接口能力_Swift(7.54) - Page.goto: net::ERR_NETWORK_CHANGED at https://open.feishu.cn/document/uAjLw4CM/
+2026-02-03 08:46:52,051 [WARNING]   重试 1/3: 移动应用登录概述 - Page.goto: net::ERR_NETWORK_CHANGED at https://open.feishu.cn/document/common-ca
+2026-02-03 08:48:24,211 [WARNING]   重试 1/3: 小程序接入指南 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 08:48:56,217 [WARNING]   重试 2/3: 小程序接入指南 - Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://open.f
+2026-02-03 09:24:48,492 [INFO] 报告已生成: harvest_report.md
+2026-02-03 09:30:40,339 [INFO] 已加载历史进度: 998 完成, 1 失败
+2026-02-03 09:31:05,201 [INFO] 报告已生成: harvest_report.md
