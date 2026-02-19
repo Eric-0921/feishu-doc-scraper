@@ -8,6 +8,7 @@ __pycache__/
 venv/
 .env
 
-# 捕获的数据 (可选，但建议包含以便备份目前的侦察结果)
+# 捕获的数据
+logs/
 # structure.json
 # toc_report.md
